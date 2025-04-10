@@ -1,4 +1,4 @@
-package org.sopt.domain;
+package org.sopt.domain.post;
 
 public class Post {
     private final int id;

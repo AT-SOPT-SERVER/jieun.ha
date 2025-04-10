@@ -1,6 +1,7 @@
 package org.sopt.service;
 
-import org.sopt.domain.Post;
+import org.sopt.domain.post.Post;
+import org.sopt.domain.post.validator.PostValidator;
 import org.sopt.repository.PostRepository;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class PostService {
     private final PostRepository postRepository = new PostRepository();
 
     public void createPost(Post post) {
+        PostValidator.validateTitle(post.getTitle());
         postRepository.save(post);
     }
 
@@ -26,6 +28,7 @@ public class PostService {
     }
 
     public boolean updatePostTitle(int id, String newTitle) {
+        PostValidator.validateTitle(newTitle);
         return postRepository.modifyPostTitleById(id, newTitle);
     }
 }

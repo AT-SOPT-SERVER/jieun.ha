@@ -1,6 +1,6 @@
 package org.sopt.controller;
 
-import org.sopt.domain.Post;
+import org.sopt.domain.post.Post;
 import org.sopt.service.PostService;
 
 import java.util.List;

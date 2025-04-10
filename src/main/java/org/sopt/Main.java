@@ -1,9 +1,9 @@
 package org.sopt;
 
 import org.sopt.controller.PostController;
-import org.sopt.domain.Post;
+import org.sopt.domain.post.Post;
+import org.sopt.domain.post.exception.InvalidTitleException;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -24,8 +24,12 @@ public class Main {
                     System.out.println("\n📝 [게시글 작성]");
                     System.out.print("📌 제목을 입력해주세요: ");
                     String title = scanner.nextLine();
-                    controller.createPost(title);
-                    System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
+                    try {
+                        controller.createPost(title);
+                        System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
+                    } catch (InvalidTitleException e) {
+                        System.out.println("❌ " + e.getMessage());
+                    }
                     break;
 
                 case "2":
