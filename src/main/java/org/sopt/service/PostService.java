@@ -1,5 +1,6 @@
 package org.sopt.service;
 
+import org.sopt.controller.IdGenerator;
 import org.sopt.domain.post.Post;
 import org.sopt.domain.post.validator.PostValidator;
 import org.sopt.repository.PostRepository;
@@ -9,8 +10,10 @@ import java.util.List;
 // 비즈니스 로직 수행(Repository를 직접 사용)
 public class PostService {
     private final PostRepository postRepository = new PostRepository();
+    private final IdGenerator idGenerator = new IdGenerator();
 
-    public void createPost(Post post) {
+    public void createPost(String title) {
+        Post post = new Post(idGenerator.generateId(), title);
         PostValidator.validateTitle(post.getTitle());
         postRepository.save(post);
     }

@@ -11,8 +11,7 @@ public class PostController {
     private int postId;
 
     public void createPost(String title) {
-        Post post = new Post(postId++, title);
-        postService.createPost(post);
+        postService.createPost(title);
     }
 
     public List<Post> getAllPosts() {
