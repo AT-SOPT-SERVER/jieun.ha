@@ -3,7 +3,6 @@ package org.sopt.domain.post;
 public class Post {
     private final int id;
     private String title;
-    private String content;
 
     public Post(int id, String title) {
         this.id = id;
