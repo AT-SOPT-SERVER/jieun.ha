@@ -32,10 +32,11 @@ public class PostRepository {
         );
     }
 
-    public boolean modifyPostTitleById(int id, String title) {
+    public boolean modifyPostTitleById(int id, String newTitle) {
         Post post = findById(id);
+
         if (post != null) {
-            post.setTitle(title);
+            post.renameTitle(newTitle);
             return true;
         }
         return false;

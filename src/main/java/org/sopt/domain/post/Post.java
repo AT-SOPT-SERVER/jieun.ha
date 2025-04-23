@@ -17,7 +17,7 @@ public class Post {
         return this.title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void renameTitle(String newTitle) {
+        this.title = newTitle;
     }
 }
