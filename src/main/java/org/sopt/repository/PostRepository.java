@@ -26,10 +26,8 @@ public class PostRepository {
         return null;
     }
 
-    public boolean deletePostById(int id) {
-        return postList.removeIf(post ->
-                post.getId() == id
-        );
+    public void deletePost(Post post) {
+        postList.remove(post);
     }
 
     public boolean modifyPostTitleById(int id, String newTitle) {
