@@ -7,7 +7,7 @@ import java.util.List;
 
 // 데이터 관리
 public class PostRepository {
-    List<Post> postList = new ArrayList<>();
+    private final List<Post> postList = new ArrayList<>();
 
     public void save(Post post) {
         postList.add(post);
