@@ -1,6 +1,6 @@
 package org.sopt.service;
 
-import org.sopt.controller.IdGenerator;
+import org.sopt.service.util.IdGenerator;
 import org.sopt.domain.post.Post;
 import org.sopt.domain.post.validator.PostValidator;
 import org.sopt.repository.PostRepository;

@@ -1,4 +1,4 @@
-package org.sopt.controller;
+package org.sopt.service.util;
 
 public class IdGenerator {
     private int id = 1;
