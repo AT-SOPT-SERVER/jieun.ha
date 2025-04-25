@@ -1,15 +1,26 @@
 package org.sopt.domain.post;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Post {
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String title;
 
-    public Post(int id, String title) {
-        this.id = id;
+    public Post() {
+
+    }
+
+    public Post(String title) {
         this.title = title;
     }
 
-    public int getId() {
+    public Long getId() {
         return this.id;
     }
 

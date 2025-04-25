@@ -1,31 +1,44 @@
 package org.sopt.controller;
 
 import org.sopt.domain.post.Post;
+import org.sopt.dto.PostRequest;
 import org.sopt.service.PostService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 // 요청을 받아 처리하는 역할
 public class PostController {
-    private final PostService postService = new PostService();
+    private final PostService postService;
 
-    public void createPost(String title) {
-        postService.createPost(title);
+    public PostController(PostService postService) {
+        this.postService = postService;
     }
 
-    public List<Post> getAllPosts() {
-        return postService.getAllPost();
+    @PostMapping("/post")
+    public void createPost(@RequestBody final PostRequest postRequest) {
+        postService.createPost(postRequest.title());
     }
 
-    public Post getPostById(int postId) {
-        return postService.getPostById(postId);
+    @GetMapping("/get")
+    public ResponseEntity<List<Post>> getAllPosts() {
+        return ResponseEntity.ok(postService.getAllPost());
     }
 
-    public boolean deletePostById(int postId) {
-        return postService.deletePostById(postId);
+    @GetMapping("/get/{post-id}")
+    public ResponseEntity<Post> getPostById(@PathVariable("post-id") Long postId) {
+        return ResponseEntity.ok(postService.getPostById(postId));
     }
 
-    public boolean updatePostTitle(int postId, String newTitle) {
-        return postService.updatePostTitle(postId, newTitle);
+    @DeleteMapping("/delete/{post-id}")
+    public ResponseEntity<Boolean> deletePostById(@PathVariable("post-id") Long postId) {
+        return ResponseEntity.ok(postService.deletePostById(postId));
+    }
+
+    @PatchMapping("/patch/{post-id}")
+    public ResponseEntity<Boolean> updatePostTitle(@PathVariable("post-id") Long postId, @RequestBody final PostRequest postRequest) {
+        return ResponseEntity.ok(postService.updatePostTitle(postId, postRequest.title()));
     }
 }
