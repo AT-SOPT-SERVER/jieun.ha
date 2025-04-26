@@ -1,7 +1,8 @@
 package org.sopt.controller;
 
 import org.sopt.domain.post.Post;
-import org.sopt.dto.PostRequest;
+import org.sopt.dto.base.BaseResponse;
+import org.sopt.dto.request.PostRequest;
 import org.sopt.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,28 +18,28 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping("/post")
+    @PostMapping("/board/post")
     public void createPost(@RequestBody final PostRequest postRequest) {
         postService.createPost(postRequest.title());
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<List<Post>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPost());
+    @GetMapping("/board")
+    public BaseResponse<List<Post>> getAllPosts() {
+        return BaseResponse.success(postService.getAllPost());
     }
 
-    @GetMapping("/get/{post-id}")
-    public ResponseEntity<Post> getPostById(@PathVariable("post-id") Long postId) {
-        return ResponseEntity.ok(postService.getPostById(postId));
+    @GetMapping("/board/{post-id}")
+    public BaseResponse<Post> getPostById(@PathVariable("post-id") Long postId) {
+        return BaseResponse.success(postService.getPostById(postId));
     }
 
-    @DeleteMapping("/delete/{post-id}")
-    public ResponseEntity<Boolean> deletePostById(@PathVariable("post-id") Long postId) {
-        return ResponseEntity.ok(postService.deletePostById(postId));
+    @DeleteMapping("/board/{post-id}/delete")
+    public BaseResponse<Boolean> deletePostById(@PathVariable("post-id") Long postId) {
+        return BaseResponse.success(postService.deletePostById(postId));
     }
 
-    @PatchMapping("/patch/{post-id}")
-    public ResponseEntity<Boolean> updatePostTitle(@PathVariable("post-id") Long postId, @RequestBody final PostRequest postRequest) {
-        return ResponseEntity.ok(postService.updatePostTitle(postId, postRequest.title()));
+    @PatchMapping("/board/{post-id}/modify")
+    public BaseResponse<Boolean> updatePostTitle(@PathVariable("post-id") Long postId, @RequestBody final PostRequest postRequest) {
+        return BaseResponse.success(postService.updatePostTitle(postId, postRequest.title()));
     }
 }
