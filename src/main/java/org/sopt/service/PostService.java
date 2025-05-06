@@ -1,20 +1,24 @@
 package org.sopt.service;
 
-import org.sopt.service.util.IdGenerator;
 import org.sopt.domain.post.Post;
 import org.sopt.domain.post.validator.PostValidator;
-import org.sopt.repository.PostRepository;
+import org.sopt.repository.PostRepositoryImpl;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 // 비즈니스 로직 수행(Repository를 직접 사용)
 public class PostService {
-    private final PostRepository postRepository = new PostRepository();
-    private final IdGenerator idGenerator = new IdGenerator();
+    private final PostRepositoryImpl postRepository;
+
+    public PostService(PostRepositoryImpl postRepository) {
+        this.postRepository = postRepository;
+    }
 
     public void createPost(String title) {
-        Post post = new Post(idGenerator.generateId(), title);
-        PostValidator.validateTitle(post.getTitle());
+        PostValidator.validateTitle(title);
+        Post post = new Post(title);
         postRepository.save(post);
     }
 
@@ -22,21 +26,22 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post getPostById(int id) {
-        return postRepository.findById(id);
+    public Post getPostById(Long id) {
+        return postRepository.findById(id).orElseThrow();
     }
 
-    public boolean deletePostById(int id) {
-        Post post = postRepository.findById(id);
-        if (post != null) {
-            postRepository.deletePost(post);
-            return true;
-        }
-        return false;
+    public boolean deletePostById(Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        postRepository.delete(post);
+        return true;
+
     }
 
-    public boolean updatePostTitle(int id, String newTitle) {
+    public boolean updatePostTitle(Long id, String newTitle) {
         PostValidator.validateTitle(newTitle);
-        return postRepository.modifyPostTitleById(id, newTitle);
+        Post post = postRepository.findById(id).orElseThrow();
+        post.renameTitle(newTitle);
+        postRepository.save(post);
+        return true;
     }
 }

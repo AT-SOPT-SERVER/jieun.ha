@@ -9,6 +9,10 @@ build/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/gradle.xml
+.idea/jpa.xml
+.idea/misc.xml
+.idea/uiDesigner.xml
 *.iws
 *.iml
 *.ipr
@@ -40,3 +44,5 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+application.yml
