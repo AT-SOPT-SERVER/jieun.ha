@@ -12,7 +12,7 @@ import java.util.List;
 public class PostService {
     private final PostRepositoryImpl postRepository;
 
-    public PostService(PostRepositoryImpl postRepository) {
+    protected PostService(final PostRepositoryImpl postRepository) {
         this.postRepository = postRepository;
     }
 

@@ -12,7 +12,7 @@ public class Post {
     private Long id;
     private String title;
 
-    public Post() {
+    protected Post() {
 
     }
 

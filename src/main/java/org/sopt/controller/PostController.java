@@ -10,11 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/board")
-// 요청을 받아 처리하는 역할
 public class PostController {
     private final PostService postService;
 
-    public PostController(PostService postService) {
+    protected PostController(PostService postService) {
         this.postService = postService;
     }
 
