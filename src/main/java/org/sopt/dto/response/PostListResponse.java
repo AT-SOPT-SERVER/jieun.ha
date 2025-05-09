@@ -1,8 +1,13 @@
 package org.sopt.dto.response;
 
-import org.sopt.domain.post.Post;
-
 import java.util.List;
 
-public record PostListResponse(List<Post> postList) {
+public record PostListResponse(
+        List<PostSummary> posts
+) {
+    public record PostSummary(
+            String postTitle,
+            String userName
+    ) {
+    }
 }
