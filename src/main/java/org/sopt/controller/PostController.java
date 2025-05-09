@@ -4,6 +4,7 @@ import org.sopt.domain.Post;
 import org.sopt.dto.base.BaseResponse;
 import org.sopt.dto.request.PostCreateRequest;
 import org.sopt.dto.response.PostListResponse;
+import org.sopt.dto.response.PostResponse;
 import org.sopt.dto.type.SuccessMessage;
 import org.sopt.service.PostService;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class PostController {
     }
 
     @GetMapping("/{post-id}")
-    public BaseResponse<Post> getPostById(
+    public BaseResponse<PostResponse> getPostById(
             @RequestHeader Long userId,
             @PathVariable("post-id") Long postId
     ) {

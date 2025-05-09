@@ -4,6 +4,7 @@ import org.sopt.domain.Post;
 import org.sopt.domain.User;
 import org.sopt.dto.request.PostCreateRequest;
 import org.sopt.dto.response.PostListResponse;
+import org.sopt.dto.response.PostResponse;
 import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
 import org.sopt.repository.PostJpaRepository;
@@ -44,11 +45,17 @@ public class PostService {
         return new PostListResponse(postSummaries);
     }
 
-    public Post getPostById(Long userId, Long postId) {
+    public PostResponse getPostById(Long userId, Long postId) {
         if (!userRepository.existsById(userId)) {
             throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
         }
+
         return postRepository.findById(postId)
+                .map( post -> new PostResponse(
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getUser().getName()
+                ))
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
     }
 

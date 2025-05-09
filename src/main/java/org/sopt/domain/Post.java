@@ -31,6 +31,10 @@ public class Post {
         return this.title;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public User getUser() {
         return user;
     }
