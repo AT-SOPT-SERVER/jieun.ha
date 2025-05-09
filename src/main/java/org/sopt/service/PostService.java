@@ -42,9 +42,7 @@ public class PostService {
     }
 
     public PostListResponse getAllPost(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
-        }
+        validateUserIdExist(userId);
         List<Post> postList = postRepository.findAll();
         List<PostListResponse.PostSummary> postSummaries = postList.stream()
                 .map(post -> new PostListResponse.PostSummary(
@@ -56,9 +54,7 @@ public class PostService {
     }
 
     public PostResponse getPostById(Long userId, Long postId) {
-        if (!userRepository.existsById(userId)) {
-            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
-        }
+        validateUserIdExist(userId);
 
         return postRepository.findById(postId)
                 .map(post -> new PostResponse(
@@ -71,13 +67,8 @@ public class PostService {
 
     @Transactional
     public PostResponse updatePostTitle(Long userId, Long postId, String newTitle) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
-
-        if (!post.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
-        }
-
+        validateUserIdExist(userId);
+        Post post = validatePostIdExist(postId);
         post.renameTitle(newTitle);
         postRepository.save(post);
         return new PostResponse(
@@ -89,13 +80,19 @@ public class PostService {
 
     @Transactional
     public void deletePostById(Long userId, Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
+        Post post = validatePostIdExist(postId);
+        post.validateIdIsSame(userId);
+        postRepository.delete(post);
+    }
 
-        if (!post.getUser().getId().equals(userId)) {
+    private void validateUserIdExist(Long userId){
+        if (!userRepository.existsById(userId)) {
             throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
         }
+    }
 
-        postRepository.delete(post);
+    private Post validatePostIdExist(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
     }
 }

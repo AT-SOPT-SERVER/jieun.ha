@@ -2,6 +2,8 @@ package org.sopt.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.sopt.dto.type.ErrorMessage;
+import org.sopt.exception.CustomException;
 
 @Entity
 public class Post {
@@ -46,5 +48,11 @@ public class Post {
 
     public void renameTitle(String newTitle) {
         this.title = newTitle;
+    }
+
+    public void validateIdIsSame(Long requestUserId) {
+        if (!user.getId().equals(requestUserId)) {
+            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
+        }
     }
 }
