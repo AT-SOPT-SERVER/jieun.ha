@@ -3,6 +3,7 @@ package org.sopt.controller;
 import org.sopt.domain.Post;
 import org.sopt.dto.base.BaseResponse;
 import org.sopt.dto.request.PostCreateRequest;
+import org.sopt.dto.request.PostTitleUpdateRequest;
 import org.sopt.dto.response.PostListResponse;
 import org.sopt.dto.response.PostResponse;
 import org.sopt.dto.type.SuccessMessage;
@@ -45,12 +46,12 @@ public class PostController {
     }
 
     @PatchMapping("/{post-id}")
-    public BaseResponse<Boolean> updatePostTitle(
+    public BaseResponse<PostResponse> updatePostTitle(
             @RequestHeader Long userId,
             @PathVariable("post-id") Long postId,
-            @RequestBody final PostCreateRequest postCreateRequest
+            @RequestBody final PostTitleUpdateRequest postTitleUpdateRequest
     ) {
-        return BaseResponse.success(SuccessMessage.OK, postService.updatePostTitle(userId, postId, postCreateRequest.title()));
+        return BaseResponse.success(SuccessMessage.OK, postService.updatePostTitle(userId, postId, postTitleUpdateRequest.title()));
     }
 
     @DeleteMapping("/{post-id}")

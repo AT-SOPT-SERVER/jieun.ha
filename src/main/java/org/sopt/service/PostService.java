@@ -59,6 +59,23 @@ public class PostService {
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
     }
 
+    public PostResponse updatePostTitle(Long userId, Long postId, String newTitle) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
+        }
+
+        post.renameTitle(newTitle);
+        postRepository.save(post);
+        return new PostResponse(
+                post.getTitle(),
+                post.getContent(),
+                post.getUser().getName()
+        );
+    }
+
     public boolean deletePostById(Long userId, Long postId) {
         if (!userRepository.existsById(userId)) {
             throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
@@ -68,16 +85,5 @@ public class PostService {
         postRepository.delete(post);
         return true;
 
-    }
-
-    public boolean updatePostTitle(Long userId, Long postId, String newTitle) {
-        if (!userRepository.existsById(userId)) {
-            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
-        }
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
-        post.renameTitle(newTitle);
-        postRepository.save(post);
-        return true;
     }
 }
