@@ -19,6 +19,18 @@ public class BaseResponse<T> {
         this.data = data;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
     public static <T> BaseResponse<T> success(SuccessMessage success) {
         return new BaseResponse<>(success.getHttpStatusCode(), success.getMessage());
     }
