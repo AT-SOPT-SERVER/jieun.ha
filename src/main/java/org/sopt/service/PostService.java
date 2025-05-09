@@ -10,9 +10,9 @@ import org.sopt.exception.CustomException;
 import org.sopt.repository.PostJpaRepository;
 import org.sopt.repository.UserJpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -24,6 +24,7 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public void createPost(Long userId, PostCreateRequest postCreateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
@@ -37,7 +38,7 @@ public class PostService {
         }
         List<Post> postList = postRepository.findAll();
         List<PostListResponse.PostSummary> postSummaries = postList.stream()
-                .map( post -> new PostListResponse.PostSummary(
+                .map(post -> new PostListResponse.PostSummary(
                         post.getTitle(),
                         post.getUser().getName()
                 ))
@@ -51,7 +52,7 @@ public class PostService {
         }
 
         return postRepository.findById(postId)
-                .map( post -> new PostResponse(
+                .map(post -> new PostResponse(
                         post.getTitle(),
                         post.getContent(),
                         post.getUser().getName()
@@ -59,6 +60,7 @@ public class PostService {
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
     }
 
+    @Transactional
     public PostResponse updatePostTitle(Long userId, Long postId, String newTitle) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
@@ -76,6 +78,7 @@ public class PostService {
         );
     }
 
+    @Transactional
     public void deletePostById(Long userId, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
