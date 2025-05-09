@@ -8,6 +8,9 @@ public enum ErrorMessage {
     INVALID_TITLE_ERROR(HttpStatus.BAD_REQUEST, "30자 이내의 제목을 입력해주세요."),
     DUPLICATE_TITLE_ERROR(HttpStatus.BAD_REQUEST, "중복된 게시글 제목입니다."),
 
+    // 401 Unauthorized
+    UNAUTHORIZED_ERROR(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
+
     // 404 Not Found
     NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "해당 리소스가 존재하지 않습니다."),
 
