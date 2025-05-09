@@ -16,11 +16,7 @@ public class UserService {
 
     @Transactional
     public Long save(final UserCreateRequest userCreateRequest) {
-        User user = userCreateRequest.toUserEntity(
-                userCreateRequest.name(),
-                userCreateRequest.email(),
-                userCreateRequest.age()
-        );
+        User user = userCreateRequest.toUserEntity();
         return userRepository.save(user).getId();
     }
 }
