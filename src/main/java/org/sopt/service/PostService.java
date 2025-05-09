@@ -28,6 +28,15 @@ public class PostService {
     public void createPost(Long userId, PostCreateRequest postCreateRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
+
+        if (postCreateRequest.title().length() > 30) {
+            throw new CustomException(ErrorMessage.INVALID_TITLE_ERROR);
+        }
+
+        if (postCreateRequest.content().length() > 1000) {
+            throw new CustomException(ErrorMessage.INVALID_CONTENT_ERROR);
+        }
+
         Post post = postCreateRequest.toPostEntity(user);
         postRepository.save(post);
     }

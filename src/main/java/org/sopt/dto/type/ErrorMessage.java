@@ -6,6 +6,7 @@ public enum ErrorMessage {
     // 400 Bad Request
     INVALID_HEADER_ERROR(HttpStatus.BAD_REQUEST, "유효하지 않은 헤더입니다."),
     INVALID_TITLE_ERROR(HttpStatus.BAD_REQUEST, "30자 이내의 제목을 입력해주세요."),
+    INVALID_CONTENT_ERROR(HttpStatus.BAD_REQUEST, "1000자 이내의 내용을 입력해주세요."),
     DUPLICATE_TITLE_ERROR(HttpStatus.BAD_REQUEST, "중복된 게시글 제목입니다."),
 
     // 401 Unauthorized
