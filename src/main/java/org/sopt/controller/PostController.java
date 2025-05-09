@@ -1,8 +1,10 @@
 package org.sopt.controller;
 
-import org.sopt.domain.post.Post;
+import org.sopt.domain.Post;
 import org.sopt.dto.base.BaseResponse;
-import org.sopt.dto.request.PostRequest;
+import org.sopt.dto.request.PostCreateRequest;
+import org.sopt.dto.response.PostListResponse;
+import org.sopt.dto.type.SuccessMessage;
 import org.sopt.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,27 +20,43 @@ public class PostController {
     }
 
     @PostMapping()
-    public void createPost(@RequestBody final PostRequest postRequest) {
-        postService.createPost(postRequest.title());
+    public BaseResponse<?> createPost(
+            @RequestHeader Long userId,
+            @RequestBody final PostCreateRequest postCreateRequest
+    ) {
+        postService.createPost(userId, postCreateRequest);
+        return BaseResponse.success(SuccessMessage.CREATED);
     }
 
     @GetMapping()
-    public BaseResponse<List<Post>> getAllPosts() {
-        return BaseResponse.success(postService.getAllPost());
+    public BaseResponse<PostListResponse> getAllPosts(
+            @RequestHeader Long userId
+    ) {
+        return BaseResponse.success(SuccessMessage.OK, postService.getAllPost(userId));
     }
 
     @GetMapping("/{post-id}")
-    public BaseResponse<Post> getPostById(@PathVariable("post-id") Long postId) {
-        return BaseResponse.success(postService.getPostById(postId));
-    }
-
-    @DeleteMapping("/{post-id}")
-    public BaseResponse<Boolean> deletePostById(@PathVariable("post-id") Long postId) {
-        return BaseResponse.success(postService.deletePostById(postId));
+    public BaseResponse<Post> getPostById(
+            @RequestHeader Long userId,
+            @PathVariable("post-id") Long postId
+    ) {
+        return BaseResponse.success(SuccessMessage.OK, postService.getPostById(userId, postId));
     }
 
     @PatchMapping("/{post-id}")
-    public BaseResponse<Boolean> updatePostTitle(@PathVariable("post-id") Long postId, @RequestBody final PostRequest postRequest) {
-        return BaseResponse.success(postService.updatePostTitle(postId, postRequest.title()));
+    public BaseResponse<Boolean> updatePostTitle(
+            @RequestHeader Long userId,
+            @PathVariable("post-id") Long postId,
+            @RequestBody final PostCreateRequest postCreateRequest
+    ) {
+        return BaseResponse.success(SuccessMessage.OK, postService.updatePostTitle(userId, postId, postCreateRequest.title()));
+    }
+
+    @DeleteMapping("/{post-id}")
+    public BaseResponse<Boolean> deletePostById(
+            @RequestHeader Long userId,
+            @PathVariable("post-id") Long postId
+    ) {
+        return BaseResponse.success(SuccessMessage.OK, postService.deletePostById(userId, postId));
     }
 }
