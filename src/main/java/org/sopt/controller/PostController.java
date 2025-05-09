@@ -1,5 +1,6 @@
 package org.sopt.controller;
 
+import jakarta.validation.Valid;
 import org.sopt.domain.Post;
 import org.sopt.dto.base.BaseResponse;
 import org.sopt.dto.request.PostCreateRequest;
@@ -24,7 +25,7 @@ public class PostController {
     @PostMapping()
     public BaseResponse<?> createPost(
             @RequestHeader Long userId,
-            @RequestBody final PostCreateRequest postCreateRequest
+            @Valid @RequestBody final PostCreateRequest postCreateRequest
     ) {
         postService.createPost(userId, postCreateRequest);
         return BaseResponse.success(SuccessMessage.CREATED);

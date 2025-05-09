@@ -1,5 +1,6 @@
 package org.sopt.controller;
 
+import jakarta.validation.Valid;
 import org.sopt.dto.base.BaseResponse;
 import org.sopt.dto.request.UserCreateRequest;
 import org.sopt.dto.type.SuccessMessage;
@@ -20,7 +21,7 @@ public class UserController {
 
     @PostMapping()
     public BaseResponse<Long> registerUser(
-            @RequestBody UserCreateRequest userCreateRequest
+            @Valid @RequestBody UserCreateRequest userCreateRequest
     ) {
         return BaseResponse.success(SuccessMessage.CREATED, userService.save(userCreateRequest));
     }
