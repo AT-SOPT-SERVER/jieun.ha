@@ -76,14 +76,14 @@ public class PostService {
         );
     }
 
-    public boolean deletePostById(Long userId, Long postId) {
-        if (!userRepository.existsById(userId)) {
-            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
-        }
+    public void deletePostById(Long userId, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
-        postRepository.delete(post);
-        return true;
 
+        if (!post.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
+        }
+
+        postRepository.delete(post);
     }
 }

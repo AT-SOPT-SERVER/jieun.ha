@@ -55,10 +55,11 @@ public class PostController {
     }
 
     @DeleteMapping("/{post-id}")
-    public BaseResponse<Boolean> deletePostById(
+    public BaseResponse<?> deletePostById(
             @RequestHeader Long userId,
             @PathVariable("post-id") Long postId
     ) {
-        return BaseResponse.success(SuccessMessage.OK, postService.deletePostById(userId, postId));
+        postService.deletePostById(userId, postId);
+        return BaseResponse.success(SuccessMessage.OK);
     }
 }
