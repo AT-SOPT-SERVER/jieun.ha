@@ -42,6 +42,6 @@ public class BaseResponse<T> {
     }
 
     public static <T> BaseResponse<T> error(ErrorMessage error) {
-        return new BaseResponse<>(error.getHttpStatusCode(), error.getMessage());
+        return new BaseResponse<>(error.getHttpStatusCode(), error.getMessage(), (T) Collections.emptyMap());
     }
 }
