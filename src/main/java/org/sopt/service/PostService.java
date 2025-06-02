@@ -1,47 +1,98 @@
 package org.sopt.service;
 
-import org.sopt.domain.post.Post;
-import org.sopt.domain.post.validator.PostValidator;
-import org.sopt.repository.PostRepositoryImpl;
+import org.sopt.domain.Post;
+import org.sopt.domain.User;
+import org.sopt.dto.request.PostCreateRequest;
+import org.sopt.dto.response.PostListResponse;
+import org.sopt.dto.response.PostResponse;
+import org.sopt.dto.type.ErrorMessage;
+import org.sopt.exception.CustomException;
+import org.sopt.repository.PostJpaRepository;
+import org.sopt.repository.UserJpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-// 비즈니스 로직 수행(Repository를 직접 사용)
 public class PostService {
-    private final PostRepositoryImpl postRepository;
+    private final PostJpaRepository postRepository;
+    private final UserJpaRepository userRepository;
 
-    public PostService(PostRepositoryImpl postRepository) {
+    protected PostService(final PostJpaRepository postRepository, UserJpaRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
-    public void createPost(String title) {
-        PostValidator.validateTitle(title);
-        Post post = new Post(title);
+    @Transactional
+    public void createPost(Long userId, PostCreateRequest postCreateRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
+
+        if (postCreateRequest.title().length() > 30) {
+            throw new CustomException(ErrorMessage.INVALID_TITLE_ERROR);
+        }
+
+        if (postCreateRequest.content().length() > 1000) {
+            throw new CustomException(ErrorMessage.INVALID_CONTENT_ERROR);
+        }
+
+        Post post = postCreateRequest.toPostEntity(user);
         postRepository.save(post);
     }
 
-    public List<Post> getAllPost() {
-        return postRepository.findAll();
+    public PostListResponse getAllPost(Long userId) {
+        validateUserIdExist(userId);
+        List<Post> postList = postRepository.findAll();
+        List<PostListResponse.PostSummary> postSummaries = postList.stream()
+                .map(post -> new PostListResponse.PostSummary(
+                        post.getTitle(),
+                        post.getUser().getName()
+                ))
+                .toList();
+        return new PostListResponse(postSummaries);
     }
 
-    public Post getPostById(Long id) {
-        return postRepository.findById(id).orElseThrow();
+    public PostResponse getPostById(Long userId, Long postId) {
+        validateUserIdExist(userId);
+
+        return postRepository.findById(postId)
+                .map(post -> new PostResponse(
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getUser().getName()
+                ))
+                .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
     }
 
-    public boolean deletePostById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow();
-        postRepository.delete(post);
-        return true;
-
-    }
-
-    public boolean updatePostTitle(Long id, String newTitle) {
-        PostValidator.validateTitle(newTitle);
-        Post post = postRepository.findById(id).orElseThrow();
+    @Transactional
+    public PostResponse updatePostTitle(Long userId, Long postId, String newTitle) {
+        validateUserIdExist(userId);
+        Post post = validatePostIdExist(postId);
         post.renameTitle(newTitle);
         postRepository.save(post);
-        return true;
+        return new PostResponse(
+                post.getTitle(),
+                post.getContent(),
+                post.getUser().getName()
+        );
+    }
+
+    @Transactional
+    public void deletePostById(Long userId, Long postId) {
+        Post post = validatePostIdExist(postId);
+        post.validateIdIsSame(userId);
+        postRepository.delete(post);
+    }
+
+    private void validateUserIdExist(Long userId){
+        if (!userRepository.existsById(userId)) {
+            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
+        }
+    }
+
+    private Post validatePostIdExist(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
     }
 }
