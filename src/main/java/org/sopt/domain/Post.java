@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
 
+import java.util.List;
+
 @Entity
 public class Post {
     @Id
@@ -18,6 +20,9 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     protected Post() {
     }
@@ -38,6 +43,10 @@ public class Post {
 
     public User getUser() {
         return user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     public void renameTitle(String newTitle) {
