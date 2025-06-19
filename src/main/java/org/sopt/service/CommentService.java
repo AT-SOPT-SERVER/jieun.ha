@@ -41,4 +41,22 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    @Transactional
+    public CommentResponse updateComment(Long commentId, Long userId, CommentUpdateRequest commentUpdateRequest) {
+        Comment comment = findCommentById(commentId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
+
+        if (!comment.validateIdIsSame(userId)) {
+            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
+        }
+
+        comment.updateContent(commentUpdateRequest.content());
+        return CommentResponse.from(comment);
+    }
+
+    private Comment findCommentById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorMessage.METHOD_ARGUMENT_ERROR));
+    }
 }

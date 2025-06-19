@@ -25,4 +25,13 @@ public class CommentController {
         commentService.createComment(userId, postId, commentCreateRequest);
         return BaseResponse.success(SuccessMessage.CREATED);
     }
+
+    @PatchMapping("/{comment-id}")
+    public BaseResponse<CommentResponse> updateComment(
+            @RequestHeader Long userId,
+            @PathVariable("comment-id") Long commentId,
+            @RequestBody final CommentUpdateRequest commentUpdateRequest
+    ) {
+        return BaseResponse.success(SuccessMessage.OK, commentService.updateComment(commentId, userId, commentUpdateRequest));
+    }
 }
