@@ -37,32 +37,21 @@ public class PostService {
             throw new CustomException(ErrorMessage.INVALID_CONTENT_ERROR);
         }
 
-        Post post = postCreateRequest.toPostEntity(user);
+        Post post = PostCreateRequest.toEntity(postCreateRequest, user);
         postRepository.save(post);
     }
 
     public PostListResponse getAllPost(Long userId) {
         validateUserIdExist(userId);
         List<Post> postList = postRepository.findAll();
-        List<PostListResponse.PostSummary> postSummaries = postList.stream()
-                .map(post -> new PostListResponse.PostSummary(
-                        post.getTitle(),
-                        post.getUser().getName()
-                ))
-                .toList();
-        return new PostListResponse(postSummaries);
+        return PostListResponse.from(postList);
     }
 
     public PostResponse getPostById(Long userId, Long postId) {
         validateUserIdExist(userId);
-
-        return postRepository.findById(postId)
-                .map(post -> new PostResponse(
-                        post.getTitle(),
-                        post.getContent(),
-                        post.getUser().getName()
-                ))
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
+        return PostResponse.of(post);
     }
 
     @Transactional
@@ -71,11 +60,7 @@ public class PostService {
         Post post = validatePostIdExist(postId);
         post.renameTitle(newTitle);
         postRepository.save(post);
-        return new PostResponse(
-                post.getTitle(),
-                post.getContent(),
-                post.getUser().getName()
-        );
+        return PostResponse.of(post);
     }
 
     @Transactional
