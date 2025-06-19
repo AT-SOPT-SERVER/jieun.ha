@@ -34,4 +34,13 @@ public class CommentController {
     ) {
         return BaseResponse.success(SuccessMessage.OK, commentService.updateComment(commentId, userId, commentUpdateRequest));
     }
+
+    @DeleteMapping("/{comment-id}")
+    public BaseResponse<?> deleteCommentById(
+            @RequestHeader Long userId,
+            @PathVariable("comment-id") Long commentId
+    ) {
+        commentService.deleteComment(userId, commentId);
+        return BaseResponse.success(SuccessMessage.OK);
+    }
 }

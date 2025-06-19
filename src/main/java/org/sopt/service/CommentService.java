@@ -44,7 +44,7 @@ public class CommentService {
     @Transactional
     public CommentResponse updateComment(Long commentId, Long userId, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = findCommentById(commentId);
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
 
         if (!comment.validateIdIsSame(userId)) {
@@ -53,6 +53,18 @@ public class CommentService {
 
         comment.updateContent(commentUpdateRequest.content());
         return CommentResponse.from(comment);
+    }
+
+    public void deleteComment(Long commentId, Long userId) {
+        Comment comment = findCommentById(commentId);
+        userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
+
+        if (!comment.validateIdIsSame(userId)) {
+            throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
+        }
+
+        commentRepository.delete(comment);
     }
 
     private Comment findCommentById(Long commentId) {
