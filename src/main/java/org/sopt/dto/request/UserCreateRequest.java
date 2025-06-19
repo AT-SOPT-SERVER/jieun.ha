@@ -8,7 +8,7 @@ public record UserCreateRequest(
         String email,
         Integer age
 ) {
-    public User toUserEntity( ) {
-        return new User(name, email, age);
+    public static User toEntity(UserCreateRequest request) {
+        return new User(request.name(), request.email(), request.age());
     }
 }
