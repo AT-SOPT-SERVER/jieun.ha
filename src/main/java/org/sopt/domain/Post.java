@@ -1,7 +1,6 @@
 package org.sopt.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
 
@@ -10,11 +9,14 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     protected Post() {
@@ -24,10 +26,6 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
-    }
-
-    public Long getId() {
-        return this.id;
     }
 
     public String getTitle() {
