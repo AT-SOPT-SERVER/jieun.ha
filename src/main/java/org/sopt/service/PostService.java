@@ -51,7 +51,7 @@ public class PostService {
         validateUserIdExist(userId);
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
-        return PostResponse.of(post);
+        return PostResponse.from(post);
     }
 
     @Transactional
@@ -60,7 +60,7 @@ public class PostService {
         Post post = validatePostIdExist(postId);
         post.renameTitle(newTitle);
         postRepository.save(post);
-        return PostResponse.of(post);
+        return PostResponse.from(post);
     }
 
     @Transactional
