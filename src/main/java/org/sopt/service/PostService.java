@@ -50,6 +50,10 @@ public class PostService {
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Post> postPage = postRepository.findAll(pageable);
 
+        if(postPage.isEmpty()) {
+            throw new CustomException(ErrorMessage.NOT_FOUND_ERROR);
+        }
+
         return PostListResponse.from(postPage);
     }
 

@@ -8,7 +8,8 @@ import java.util.List;
 public record PostListResponse(
         List<PostSummary> posts,
         int currentPage,
-        int totalPages
+        int totalPages,
+        boolean isLast
 ) {
     public record PostSummary(
             String postTitle,
@@ -26,7 +27,8 @@ public record PostListResponse(
         return new PostListResponse(
                 summaries,
                 postPage.getNumber() + 1,  // 0-based index → 1-based
-                postPage.getTotalPages()
+                postPage.getTotalPages(),
+                postPage.isLast()
         );
     }
 }
