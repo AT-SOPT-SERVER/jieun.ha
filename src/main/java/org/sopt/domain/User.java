@@ -21,6 +21,15 @@ public class User {
     @OneToMany(mappedBy = "user")
     private final List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private final List<Comment> comment = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private final List<CommentLike> commentLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private final List<PostLike> postLikes = new ArrayList<>();
+
     protected User() {
     }
 

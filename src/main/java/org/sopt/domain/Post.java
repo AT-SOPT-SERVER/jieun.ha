@@ -24,6 +24,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "post")
+    private List<CommentLike> commentLikes;
+
     protected Post() {
     }
 
@@ -31,6 +34,10 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getTitle() {

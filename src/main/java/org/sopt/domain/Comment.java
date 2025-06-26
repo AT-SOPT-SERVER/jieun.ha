@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Comment {
     @Id
@@ -21,6 +24,9 @@ public class Comment {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
+    @OneToMany(mappedBy = "comment")
+    private final List<CommentLike> commentLikes = new ArrayList<>();
+
     protected Comment() {}
 
     public Comment(String content, User author, Post post) {
@@ -32,17 +38,17 @@ public class Comment {
     public Long getId() {
         return id;
     }
-
     public String getContent() { return content; }
     public String getUserName() { return user.getName(); }
     public void updateContent(String content) {
         this.content = content;
     }
+    public Post getPost() { return post; }
 
     public boolean validateIdIsSame(Long requestUserId) {
         if (!user.getId().equals(requestUserId)) {
             throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
         }
-        return true;
+        return false;
     }
 }
