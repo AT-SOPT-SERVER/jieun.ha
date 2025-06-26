@@ -3,7 +3,9 @@ package org.sopt.domain;
 import jakarta.persistence.*;
 import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,6 +18,10 @@ public class Post {
     private String title;
     @Column(nullable = false)
     private String content;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -34,6 +40,11 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() {
