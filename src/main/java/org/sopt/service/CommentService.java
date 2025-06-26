@@ -47,7 +47,7 @@ public class CommentService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
 
-        if (!comment.validateIdIsSame(userId)) {
+        if (comment.validateIdIsSame(userId)) {
             throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
         }
 
@@ -60,7 +60,7 @@ public class CommentService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.UNAUTHORIZED_ERROR));
 
-        if (!comment.validateIdIsSame(userId)) {
+        if (comment.validateIdIsSame(userId)) {
             throw new CustomException(ErrorMessage.UNAUTHORIZED_ERROR);
         }
 
