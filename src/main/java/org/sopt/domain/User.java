@@ -1,7 +1,6 @@
 package org.sopt.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +11,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = true)
     private String email;
+    @Column(nullable = true)
     private Integer age;
 
     @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<>();
+    private final List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private final List<Comment> comment = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private final List<CommentLike> commentLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private final List<PostLike> postLikes = new ArrayList<>();
 
     protected User() {
     }

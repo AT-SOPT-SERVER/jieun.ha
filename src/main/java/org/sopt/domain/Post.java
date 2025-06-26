@@ -1,21 +1,37 @@
 package org.sopt.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "post")
+    private List<CommentLike> commentLikes;
 
     protected Post() {
     }
@@ -26,8 +42,13 @@ public class Post {
         this.user = user;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public String getTitle() {
@@ -40,6 +61,10 @@ public class Post {
 
     public User getUser() {
         return user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     public void renameTitle(String newTitle) {

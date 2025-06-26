@@ -9,10 +9,13 @@ import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
 import org.sopt.repository.PostJpaRepository;
 import org.sopt.repository.UserJpaRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 public class PostService {
@@ -37,32 +40,29 @@ public class PostService {
             throw new CustomException(ErrorMessage.INVALID_CONTENT_ERROR);
         }
 
-        Post post = postCreateRequest.toPostEntity(user);
+        Post post = PostCreateRequest.toEntity(postCreateRequest, user);
         postRepository.save(post);
     }
 
-    public PostListResponse getAllPost(Long userId) {
+    public PostListResponse getAllPost(Long userId, int page) {
         validateUserIdExist(userId);
-        List<Post> postList = postRepository.findAll();
-        List<PostListResponse.PostSummary> postSummaries = postList.stream()
-                .map(post -> new PostListResponse.PostSummary(
-                        post.getTitle(),
-                        post.getUser().getName()
-                ))
-                .toList();
-        return new PostListResponse(postSummaries);
+
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Post> postPage = postRepository.findAll(pageable);
+
+        if(postPage.isEmpty()) {
+            throw new CustomException(ErrorMessage.NOT_FOUND_ERROR);
+        }
+
+        return PostListResponse.from(postPage);
     }
+
 
     public PostResponse getPostById(Long userId, Long postId) {
         validateUserIdExist(userId);
-
-        return postRepository.findById(postId)
-                .map(post -> new PostResponse(
-                        post.getTitle(),
-                        post.getContent(),
-                        post.getUser().getName()
-                ))
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorMessage.NOT_FOUND_ERROR));
+        return PostResponse.from(post);
     }
 
     @Transactional
@@ -71,11 +71,7 @@ public class PostService {
         Post post = validatePostIdExist(postId);
         post.renameTitle(newTitle);
         postRepository.save(post);
-        return new PostResponse(
-                post.getTitle(),
-                post.getContent(),
-                post.getUser().getName()
-        );
+        return PostResponse.from(post);
     }
 
     @Transactional

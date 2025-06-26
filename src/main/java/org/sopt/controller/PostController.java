@@ -1,7 +1,6 @@
 package org.sopt.controller;
 
 import jakarta.validation.Valid;
-import org.sopt.domain.Post;
 import org.sopt.dto.base.BaseResponse;
 import org.sopt.dto.request.PostCreateRequest;
 import org.sopt.dto.request.PostTitleUpdateRequest;
@@ -10,8 +9,6 @@ import org.sopt.dto.response.PostResponse;
 import org.sopt.dto.type.SuccessMessage;
 import org.sopt.service.PostService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/board")
@@ -33,9 +30,10 @@ public class PostController {
 
     @GetMapping()
     public BaseResponse<PostListResponse> getAllPosts(
-            @RequestHeader Long userId
+            @RequestHeader Long userId,
+            @RequestParam(defaultValue = "1") int page
     ) {
-        return BaseResponse.success(SuccessMessage.OK, postService.getAllPost(userId));
+        return BaseResponse.success(SuccessMessage.OK, postService.getAllPost(userId, page));
     }
 
     @GetMapping("/{post-id}")

@@ -7,6 +7,7 @@ public enum ErrorMessage {
     INVALID_HEADER_ERROR(HttpStatus.BAD_REQUEST, "유효하지 않은 헤더입니다."),
     INVALID_TITLE_ERROR(HttpStatus.BAD_REQUEST, "30자 이내의 제목을 입력해주세요."),
     INVALID_CONTENT_ERROR(HttpStatus.BAD_REQUEST, "1000자 이내의 내용을 입력해주세요."),
+    INVALID_COMMENT_ERROR(HttpStatus.BAD_REQUEST, "댓글은 300자 이내로 작성해주세요."),
     INVALID_USER_NAME(HttpStatus.BAD_REQUEST, "닉네임은 10자 이내로 작성해주세요."),
     DUPLICATE_TITLE_ERROR(HttpStatus.BAD_REQUEST, "중복된 게시글 제목입니다."),
     METHOD_ARGUMENT_ERROR(HttpStatus.BAD_REQUEST, "유효하지 않은 요청값입니다."),

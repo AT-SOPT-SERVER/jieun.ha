@@ -22,7 +22,7 @@ public class UserService {
             throw new CustomException(ErrorMessage.INVALID_USER_NAME);
         }
 
-        User user = userCreateRequest.toUserEntity();
+        User user = UserCreateRequest.toEntity(userCreateRequest);
         return userRepository.save(user).getId();
     }
 }
