@@ -9,10 +9,13 @@ import org.sopt.dto.type.ErrorMessage;
 import org.sopt.exception.CustomException;
 import org.sopt.repository.PostJpaRepository;
 import org.sopt.repository.UserJpaRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 public class PostService {
@@ -41,11 +44,15 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public PostListResponse getAllPost(Long userId) {
+    public PostListResponse getAllPost(Long userId, int page) {
         validateUserIdExist(userId);
-        List<Post> postList = postRepository.findAll();
-        return PostListResponse.from(postList);
+
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Post> postPage = postRepository.findAll(pageable);
+
+        return PostListResponse.from(postPage);
     }
+
 
     public PostResponse getPostById(Long userId, Long postId) {
         validateUserIdExist(userId);

@@ -30,9 +30,10 @@ public class PostController {
 
     @GetMapping()
     public BaseResponse<PostListResponse> getAllPosts(
-            @RequestHeader Long userId
+            @RequestHeader Long userId,
+            @RequestParam(defaultValue = "1") int page
     ) {
-        return BaseResponse.success(SuccessMessage.OK, postService.getAllPost(userId));
+        return BaseResponse.success(SuccessMessage.OK, postService.getAllPost(userId, page));
     }
 
     @GetMapping("/{post-id}")
